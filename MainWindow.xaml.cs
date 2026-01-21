@@ -21,11 +21,12 @@ namespace Plotting
             InitializeComponent();
         }
 
-        private void ButtonAddName_Click(object sender, RoutedEventArgs e) {
-            if (!string.IsNullOrEmpty(txtName.Text) && !lstNames.Items.Contains(txtName.Text)) {
-                lstNames.Items.Add(txtName.Text);
-                txtName.Clear();
-            }
+        private void DelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e) {
+
         }
     }
 }

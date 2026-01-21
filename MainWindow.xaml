@@ -6,27 +6,30 @@
         xmlns:local="clr-namespace:Plotting"
         xmlns:ScottPlot="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
         mc:Ignorable="d"
-        Title="MyPlot" Height="450" Width="800">
-    
+        Title="MyPlot" Height="900" Width="1600">
+
     <Grid Margin="10">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <!-- <ScottPlot:WpfPlot x:Name="MyScottPlot" /> -->
-        
-        <Label>Names</Label>
-        <ListBox Grid.Row="1" x:Name="lstNames" />
+        <Grid Margin="10">
+        </Grid>
+        <Grid Margin="10" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Button Name="startButton" Content="Start" Margin="10,2,10,2" Width="50" Click="StartButton_Click"/>
+            <StackPanel Name="Delay" Grid.Row="2" Margin="0,15,0,0">
+                <Label Content="Delay" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="8" Margin="0,0,0,0" FontWeight="Bold"/>
+                <StackPanel>
+                    <Slider x:Name="delaySlider" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="70" ValueChanged="DelaySlider_ValueChanged" Maximum=".5"/>
+                    <TextBox Text="{Binding ElementName=delaySlider, Path=Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5,0,0,0">
-            <TextBox x:Name="txtName" />
-            <Button x:Name="btnAdd" Margin="0,5,0,0" Click="ButtonAddName_Click">
-                Add Name
-            </Button>
-        </StackPanel>
     </Grid>
 </Window>
