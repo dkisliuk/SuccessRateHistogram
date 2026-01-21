@@ -13,10 +13,10 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Grid Margin="10">
-        </Grid>
+        <ScottPlot:WpfPlot x:Name="histogram"/>
         <Grid Margin="10" Grid.Column="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -34,6 +34,12 @@
                 <StackPanel>
                     <Slider x:Name="successSlider" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="70" ValueChanged="DelaySlider_ValueChanged" Maximum="1"/>
                     <TextBox Text="{Binding ElementName=successSlider, Path=Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Row="3">
+                <Label Content="Experiment Size" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="8" Margin="0,0,0,0" FontWeight="Bold"/>
+                <StackPanel>
+                    <TextBox x:Name="experimentSize" PreviewTextInput="NumberValidationTextBox" Text="1000" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
