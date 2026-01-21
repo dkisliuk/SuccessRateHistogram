@@ -22,14 +22,20 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button Name="startButton" Content="Start" Margin="10,2,10,2" Width="50" Click="StartButton_Click"/>
-            <StackPanel Name="Delay" Grid.Row="2" Margin="0,15,0,0">
+            <StackPanel Name="Delay" Grid.Row="1" Margin="0,15,0,0">
                 <Label Content="Delay" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="8" Margin="0,0,0,0" FontWeight="Bold"/>
                 <StackPanel>
                     <Slider x:Name="delaySlider" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="70" ValueChanged="DelaySlider_ValueChanged" Maximum=".5"/>
                     <TextBox Text="{Binding ElementName=delaySlider, Path=Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
                 </StackPanel>
             </StackPanel>
+            <StackPanel Grid.Row="2">
+                <Label Content="Success Chance" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="8" Margin="0,0,0,0" FontWeight="Bold"/>
+                <StackPanel>
+                    <Slider x:Name="successSlider" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="70" ValueChanged="DelaySlider_ValueChanged" Maximum="1"/>
+                    <TextBox Text="{Binding ElementName=successSlider, Path=Value, UpdateSourceTrigger=PropertyChanged, StringFormat=N2}" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
+                </StackPanel>
+            </StackPanel>
         </Grid>
-
     </Grid>
 </Window>
