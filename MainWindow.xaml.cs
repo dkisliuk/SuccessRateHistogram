@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,18 +18,11 @@ namespace Plotting {
     public partial class MainWindow : Window {
 
         private HistogramRunner _histogramRunner;
+        private bool _isRunning = false;
 
         public MainWindow() {
             InitializeComponent();
-            HistogramSetup();
-        }
-
-        private void HistogramSetup() {
-            _histogramRunner = new HistogramRunner {
-                ExperimentSize = 1000,
-                SuccessChance = successSlider.Value,
-                Delay = delaySlider.Value
-            };
+            _histogramRunner = new HistogramRunner();
         }
 
         private void DelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -36,7 +30,15 @@ namespace Plotting {
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e) {
-
+            Console.WriteLine($"Start button pressed");
+            if (_isRunning) {
+                Stop();
+                startButton.Content = "Start";
+            }
+            else {
+                Run();
+                startButton.Content = "Stop";
+            }
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
@@ -44,5 +46,28 @@ namespace Plotting {
             e.Handled = regex.IsMatch(e.Text);
         }
 
+
+        public void Run() {
+            if (_isRunning) return;
+            _isRunning = true;
+            // RunSimulation();
+        }
+
+        public void Stop() {
+            if (!_isRunning) return;
+            _isRunning = false;
+        }
+
+        private async Task RunSimulation() {
+            Stopwatch sw = new Stopwatch();
+            while (_isRunning) {
+                sw.Start();
+                _histogramRunner.AddTrial(Int32.Parse(experimentSize.Text), successSlider.Value);
+                sw.Stop();
+                int waitTime = (int)(delaySlider.Value * 1000) - (int)sw.ElapsedMilliseconds;
+                await Task.Delay(Math.Max(0, waitTime));
+                sw.Reset();
+            }
+        }
     }
 }
