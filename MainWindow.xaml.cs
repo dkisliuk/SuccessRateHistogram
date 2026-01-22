@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ScottPlot;
 
 namespace Plotting {
     /// <summary>
@@ -65,6 +66,13 @@ namespace Plotting {
         }
         private void Clear_Click(object sender, RoutedEventArgs e) {
             _histogramRunner.ClearHistogram();
+            /*
+            WpfPlot.Plot.Clear();
+            ScottPlot.Plottables.HistogramBars histBars = WpfPlot.Plot.Add.Histogram(_histogramRunner.Histogram);
+            histBars.BarWidthFraction = 0.9;
+            WpfPlot.Plot.Axes.SetLimitsX(-.1, 1.1);
+            */
+            WpfPlot.Refresh();
             Trace.WriteLine($"Histogram cleared");
         }
 
@@ -76,6 +84,16 @@ namespace Plotting {
 
         public void Run() {
             if (_isRunning) return;
+
+            /*
+            // Remove any lingering vertical lines
+            foreach (var plottable in WpfPlot.Plot.GetPlottables()) {
+                if (plottable is ScottPlot.Plottables.VerticalLine) {
+                    WpfPlot.Plot.Remove(plottable);
+                }
+            }
+            */
+
             _isRunning = true;
             _histogramThread.Start();
         }
@@ -88,16 +106,36 @@ namespace Plotting {
 
         private void RunSimulation() {
             Stopwatch sw = new Stopwatch();
+
+            var palette = new ScottPlot.Palettes.Amber();
+            ScottPlot.Color meanColor = palette.GetColor(0);
+            var meanLine = WpfPlot.Plot.Add.VerticalLine(0, 2, meanColor);
             while (_isRunning) {
                 sw.Start();
+
                 double value = _histogramRunner.AddTrial(_experimentSize, _successChance);
                 Trace.WriteLine($"Adding {value} to histogram.");
+
+                WpfPlot.Plot.Remove(meanLine);
+                double mean = _histogramRunner.ComputeMean();
+                meanLine = WpfPlot.Plot.Add.VerticalLine(mean, 2, meanColor);
+                Trace.WriteLine($"Mean: {mean}");
+                int maxFreq = _histogramRunner.Histogram.Counts.Max();
+                WpfPlot.Plot.Axes.SetLimitsY(0, maxFreq * 1.2);
+
+                /*
+                if (_histogramRunner.Histogram.GetCumulativeCounts().Last() % 10 == 0) {
+                    double stdDev = ScottPlot.Statistics.Descriptive.StandardDeviation(_histogramRunner.Histogram.Counts);
+                    var stdDevLine = WpfPlot.Plot.Add.Line(mean, maxFreq * .1, mean+stdDev, maxFreq * .1);
+                }
+                */
+
+                WpfPlot.Refresh();
+
                 sw.Stop();
                 int waitTime = _delayMilli - (int)sw.ElapsedMilliseconds;
                 Thread.Sleep(Math.Max(0, waitTime));
                 sw.Reset();
-                WpfPlot.Refresh();
-                WpfPlot.Plot.Axes.SetLimitsY(0, _histogramRunner.Histogram.Counts.Max() * 1.2);
             }
         }
     }

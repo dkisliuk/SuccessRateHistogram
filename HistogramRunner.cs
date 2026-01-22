@@ -31,5 +31,18 @@ namespace Plotting {
 		public void ClearHistogram() {
 			_histogram.Clear();
 		}
+
+		public double ComputeMean() {
+			double mean = 0;
+
+			int nBins = Histogram.Counts.Length;
+			double halfBinWidth = (Histogram.Bins[1] - Histogram.Bins[0]) / 2;
+			for (int i = 0; i < nBins; i++) {
+				mean += Histogram.Counts[i] * (Histogram.Bins[i] + halfBinWidth);
+			}
+			mean /= Histogram.GetCumulativeCounts().Last();
+
+            return mean;
+		}
 	}
 }
