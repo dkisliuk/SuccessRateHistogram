@@ -48,7 +48,7 @@ namespace Plotting {
         }
 
         private void DelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-            _delayMilli = (int)e.NewValue * 1000;
+            _delayMilli = (int)(e.NewValue * 1000);
             Trace.WriteLine($"New delay (ms): {_delayMilli}");
         }
         private void SuccessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
@@ -70,13 +70,13 @@ namespace Plotting {
         public void Run() {
             if (_isRunning) return;
             _isRunning = true;
-            // RunSimulation();
             _histogramThread.Start();
         }
 
         public void Stop() {
             if (!_isRunning) return;
             _isRunning = false;
+            _histogramThread = new Thread(RunSimulation);
         }
 
         private void RunSimulation() {
