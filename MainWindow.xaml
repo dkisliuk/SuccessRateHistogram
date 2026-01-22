@@ -20,6 +20,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Button Name="startButton" Content="Start" Margin="10,2,10,2" Width="50" Click="StartButton_Click"/>
             <StackPanel Name="Delay" Grid.Row="1" Margin="0,15,0,0">
@@ -42,6 +43,7 @@
                     <TextBox x:Name="experimentSize" PreviewTextInput="NumberValidationTextBox" Text="1000" TextChanged="ExperimentSize_Changed" HorizontalAlignment="Center" SelectionOpacity="5" Opacity="0.8" FontSize="8"/>
                 </StackPanel>
             </StackPanel>
+            <Button Content="Clear" Grid.Row="4" x:Name="Clear" Margin="10,2,10,2" Click="Clear_Click"/>
         </Grid>
     </Grid>
 </Window>

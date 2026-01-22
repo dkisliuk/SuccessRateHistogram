@@ -63,6 +63,10 @@ namespace Plotting {
             _experimentSize = Int32.Parse(experimentSize.Text);
             Trace.WriteLine($"New experiment size: {_experimentSize}");
         }
+        private void Clear_Click(object sender, RoutedEventArgs e) {
+            _histogramRunner.ClearHistogram();
+            Trace.WriteLine($"Histogram cleared");
+        }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
             Regex regex = new Regex("[^0-9]");
