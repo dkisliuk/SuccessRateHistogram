@@ -35,6 +35,7 @@ namespace Plotting {
             _histogramThread = new Thread(RunSimulation);
             ScottPlot.Plottables.HistogramBars histBars = WpfPlot.Plot.Add.Histogram(_histogramRunner.Histogram);
             histBars.BarWidthFraction = 0.9;
+            WpfPlot.Plot.Axes.SetLimitsX(-.1, 1.1);
             this.Loaded -= OnLoaded;
         }
         private void StartButton_Click(object sender, RoutedEventArgs e) {
@@ -92,6 +93,7 @@ namespace Plotting {
                 Thread.Sleep(Math.Max(0, waitTime));
                 sw.Reset();
                 WpfPlot.Refresh();
+                WpfPlot.Plot.Axes.SetLimitsY(0, _histogramRunner.Histogram.Counts.Max() * 1.2);
             }
         }
     }
