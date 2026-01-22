@@ -19,18 +19,24 @@ namespace Plotting {
 
         private HistogramRunner _histogramRunner;
         private bool _isRunning = false;
+        private Thread _histogramThread;
+
+        private int _experimentSize = 1000;
+        private int _delayMilli = 500;
+        private double _successChance = .5;
 
         public MainWindow() {
             InitializeComponent();
+            Loaded += OnLoaded; // Initializing fields in the OnLoaded method this way is recommended
+        }
+
+        private void OnLoaded(object sender, RoutedEventArgs e) {
             _histogramRunner = new HistogramRunner();
+            _histogramThread = new Thread(RunSimulation);
+            this.Loaded -= OnLoaded;
         }
-
-        private void DelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
-
-        }
-
         private void StartButton_Click(object sender, RoutedEventArgs e) {
-            Console.WriteLine($"Start button pressed");
+            Trace.WriteLine($"Start button pressed");
             if (_isRunning) {
                 Stop();
                 startButton.Content = "Start";
@@ -39,6 +45,20 @@ namespace Plotting {
                 Run();
                 startButton.Content = "Stop";
             }
+        }
+
+        private void DelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _delayMilli = (int)e.NewValue * 1000;
+            Trace.WriteLine($"New delay (ms): {_delayMilli}");
+        }
+        private void SuccessSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _successChance = (double)e.NewValue;
+            Trace.WriteLine($"New success chance: {_successChance}");
+        }
+
+        private void ExperimentSize_Changed(object sender, TextChangedEventArgs e) {
+            _experimentSize = Int32.Parse(experimentSize.Text);
+            Trace.WriteLine($"New experiment size: {_experimentSize}");
         }
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
@@ -51,6 +71,7 @@ namespace Plotting {
             if (_isRunning) return;
             _isRunning = true;
             // RunSimulation();
+            _histogramThread.Start();
         }
 
         public void Stop() {
@@ -58,14 +79,15 @@ namespace Plotting {
             _isRunning = false;
         }
 
-        private async Task RunSimulation() {
+        private void RunSimulation() {
             Stopwatch sw = new Stopwatch();
             while (_isRunning) {
                 sw.Start();
-                _histogramRunner.AddTrial(Int32.Parse(experimentSize.Text), successSlider.Value);
+                double value = _histogramRunner.AddTrial(_experimentSize, _successChance);
+                Trace.WriteLine($"Adding {value} to histogram.");
                 sw.Stop();
-                int waitTime = (int)(delaySlider.Value * 1000) - (int)sw.ElapsedMilliseconds;
-                await Task.Delay(Math.Max(0, waitTime));
+                int waitTime = _delayMilli - (int)sw.ElapsedMilliseconds;
+                Thread.Sleep(Math.Max(0, waitTime));
                 sw.Reset();
             }
         }

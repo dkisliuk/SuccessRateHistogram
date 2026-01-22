@@ -16,7 +16,7 @@ namespace Plotting {
 			_random = new Random();
 		}
 
-		public void AddTrial(int experimentSize, double successChance) {
+		public double AddTrial(int experimentSize, double successChance) {
 			int successes = 0;
 			for (int i = 0; i < experimentSize; i++) {
 				if (_random.NextDouble() < successChance) {
@@ -25,6 +25,7 @@ namespace Plotting {
 			}
 			double value = (double)successes / experimentSize;
 			_histogram.Add(value);
+			return value;
 		}
 
 		public void ClearHistogram() {
