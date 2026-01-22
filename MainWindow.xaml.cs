@@ -66,12 +66,9 @@ namespace Plotting {
         }
         private void Clear_Click(object sender, RoutedEventArgs e) {
             _histogramRunner.ClearHistogram();
-            /*
-            WpfPlot.Plot.Clear();
-            ScottPlot.Plottables.HistogramBars histBars = WpfPlot.Plot.Add.Histogram(_histogramRunner.Histogram);
-            histBars.BarWidthFraction = 0.9;
-            WpfPlot.Plot.Axes.SetLimitsX(-.1, 1.1);
-            */
+            if (_meanLine != null) {
+                WpfPlot.Plot.Remove(_meanLine);
+            }
             WpfPlot.Refresh();
             Trace.WriteLine($"Histogram cleared");
         }
@@ -84,16 +81,6 @@ namespace Plotting {
 
         public void Run() {
             if (_isRunning) return;
-
-            /*
-            // Remove any lingering vertical lines
-            foreach (var plottable in WpfPlot.Plot.GetPlottables()) {
-                if (plottable is ScottPlot.Plottables.VerticalLine) {
-                    WpfPlot.Plot.Remove(plottable);
-                }
-            }
-            */
-
             _isRunning = true;
             _histogramThread.Start();
         }
@@ -104,21 +91,24 @@ namespace Plotting {
             _histogramThread = new Thread(RunSimulation);
         }
 
+        private ScottPlot.Plottables.VerticalLine _meanLine;
         private void RunSimulation() {
             Stopwatch sw = new Stopwatch();
-
+            if (_meanLine != null) {
+                WpfPlot.Plot.Remove(_meanLine);
+            }
             var palette = new ScottPlot.Palettes.Amber();
             ScottPlot.Color meanColor = palette.GetColor(0);
-            var meanLine = WpfPlot.Plot.Add.VerticalLine(0, 2, meanColor);
+            _meanLine = WpfPlot.Plot.Add.VerticalLine(0, 2, meanColor);
             while (_isRunning) {
                 sw.Start();
 
                 double value = _histogramRunner.AddTrial(_experimentSize, _successChance);
                 Trace.WriteLine($"Adding {value} to histogram.");
 
-                WpfPlot.Plot.Remove(meanLine);
+                WpfPlot.Plot.Remove(_meanLine);
                 double mean = _histogramRunner.ComputeMean();
-                meanLine = WpfPlot.Plot.Add.VerticalLine(mean, 2, meanColor);
+                _meanLine = WpfPlot.Plot.Add.VerticalLine(mean, 2, meanColor);
                 Trace.WriteLine($"Mean: {mean}");
                 int maxFreq = _histogramRunner.Histogram.Counts.Max();
                 WpfPlot.Plot.Axes.SetLimitsY(0, maxFreq * 1.2);
