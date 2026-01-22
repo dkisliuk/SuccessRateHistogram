@@ -13,7 +13,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <ScottPlot:WpfPlot x:Name="histogram"/>
+        <ScottPlot:WpfPlot x:Name="WpfPlot"/>
         <Grid Margin="10" Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />

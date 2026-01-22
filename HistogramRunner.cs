@@ -12,7 +12,7 @@ namespace Plotting {
 		public Histogram @Histogram { get { return _histogram; } }
 
 		public HistogramRunner() {
-			_histogram = Histogram.WithBinSize(1, 0, 100);
+			_histogram = Histogram.WithBinSize(.01, 0, 1);
 			_random = new Random();
 		}
 

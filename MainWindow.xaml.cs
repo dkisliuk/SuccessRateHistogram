@@ -33,6 +33,8 @@ namespace Plotting {
         private void OnLoaded(object sender, RoutedEventArgs e) {
             _histogramRunner = new HistogramRunner();
             _histogramThread = new Thread(RunSimulation);
+            ScottPlot.Plottables.HistogramBars histBars = WpfPlot.Plot.Add.Histogram(_histogramRunner.Histogram);
+            histBars.BarWidthFraction = 0.9;
             this.Loaded -= OnLoaded;
         }
         private void StartButton_Click(object sender, RoutedEventArgs e) {
@@ -89,6 +91,7 @@ namespace Plotting {
                 int waitTime = _delayMilli - (int)sw.ElapsedMilliseconds;
                 Thread.Sleep(Math.Max(0, waitTime));
                 sw.Reset();
+                WpfPlot.Refresh();
             }
         }
     }
