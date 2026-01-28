@@ -25,11 +25,14 @@ namespace Plotting {
         private int _experimentSize = 1000;
         private int _delayMilli = 500;
         private double _successChance = .5;
+        private int _numBins = 100;
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
         public MainWindow() {
             InitializeComponent();
             Loaded += OnLoaded; // Initializing fields in the OnLoaded method this way is recommended
         }
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
 
         private void OnLoaded(object sender, RoutedEventArgs e) {
             _histogramRunner = new HistogramRunner();
@@ -83,8 +86,15 @@ namespace Plotting {
             }
         }
 
+        private void NumBinsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            _numBins = (int)numBinsSlider.Value;
+        }
+
         private void Clear_Click(object sender, RoutedEventArgs e) {
             _histogramRunner.ClearHistogram();
+            _histogramRunner.SetNumberOfBins(_numBins);
+            ScottPlot.Plottables.HistogramBars histBars = WpfPlot.Plot.Add.Histogram(_histogramRunner.Histogram);
+            histBars.BarWidthFraction = 0.9;
             if (_meanLine != null) {
                 WpfPlot.Plot.Remove(_meanLine);
             }
@@ -141,5 +151,6 @@ namespace Plotting {
                 sw.Reset();
             }
         }
+
     }
 }

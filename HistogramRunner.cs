@@ -28,6 +28,22 @@ namespace Plotting {
 			return value;
 		}
 
+		public void SetNumberOfBins(int nBins) {
+			if (nBins <= 0) {
+				throw new ArgumentOutOfRangeException("Choose a positive number of bins.");
+			}
+			ClearHistogram();
+			double binWidth = 1.0/nBins; 
+			_histogram = Histogram.WithBinSize(binWidth, 0, 1);
+		}
+		public void SetBinSize(double binSize) {
+			if (binSize <= 0) {
+				throw new ArgumentOutOfRangeException("Choose a positive bin size.");
+			}
+			ClearHistogram();
+			_histogram = Histogram.WithBinSize(binSize, 0, 1);
+		}
+
 		public void ClearHistogram() {
 			_histogram.Clear();
 		}
