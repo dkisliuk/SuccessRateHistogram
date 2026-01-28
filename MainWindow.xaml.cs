@@ -61,9 +61,25 @@ namespace Plotting {
         }
 
         private void ExperimentSize_Changed(object sender, TextChangedEventArgs e) {
-            _experimentSize = Int32.Parse(experimentSize.Text);
-            Trace.WriteLine($"New experiment size: {_experimentSize}");
+            if (experimentSize.Text.Equals(String.Empty) || experimentSize.Text.Equals("0")) {
+                experimentSize.Text = "1";
+            }
+            else if (!experimentSize.Text.All(char.IsDigit)) { // User has input some invalid text
+                experimentSize.Text = _experimentSize.ToString();
+            }
+            else { // All good
+                e.Handled = true;
+                try {
+                    _experimentSize = Int32.Parse(experimentSize.Text);
+                }
+                catch {
+                    throw new Exception($"ExperimentSize_Changed call has invalid text '{experimentSize.Text}' which is not handled.");
+                }
+
+                Trace.WriteLine($"New experiment size: {_experimentSize}");
+            }
         }
+
         private void Clear_Click(object sender, RoutedEventArgs e) {
             _histogramRunner.ClearHistogram();
             if (_meanLine != null) {
@@ -72,12 +88,6 @@ namespace Plotting {
             WpfPlot.Refresh();
             Trace.WriteLine($"Histogram cleared");
         }
-
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
-            Regex regex = new Regex("[^0-9]");
-            e.Handled = regex.IsMatch(e.Text);
-        }
-
 
         public void Run() {
             if (_isRunning) return;
