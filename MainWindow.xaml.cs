@@ -71,6 +71,9 @@ namespace Plotting {
                 e.Handled = true;
                 try {
                     _experimentSize = Int32.Parse(experimentSize.Text);
+                    if (_experimentSize > 9999) {
+                        experimentSize.Text = "9999";
+                    }
                 }
                 catch {
                     throw new Exception($"ExperimentSize_Changed call has invalid text '{experimentSize.Text}' which is not handled.");
